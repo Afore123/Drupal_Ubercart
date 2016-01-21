@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Checks the requirements for the installation of the Exalt Merchant module.
+ */
+
+/**
+ * Implementation of hook_requirements().
+ */
+function eaxltmerchant_requirements($phase) {
+  $t = get_t();
+
+  $has_curl = function_exists('curl_init');
+
+  $requirements['exalt_curl'] = array(
+    'title' => $t('Exalt Merchant cURL support'),
+    'value' => $has_curl ? $t('Enabled') : $t('Not found'),
+  );
+
+  if (!$has_curl) {
+    $requirements['exaltmerchant_curl']['severity'] = REQUIREMENT_ERROR;
+    $requirements['exaltmerchant_curl']['description'] = $t("Exalt Merchant requires the PHP <a href='!curl_url'>cURL</a> library.", array('!curl_url' => 'http://php.net/manual/en/curl.setup.php'));
+  }
+
+  return $requirements;
+}
